@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Chat 💬</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #ece5dd;
+}
+
+/* Container */
+.chat-container {
+    max-width: 500px;
+    margin: auto;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header */
+.header {
+    background: #075e54;
+    color: white;
+    padding: 15px;
+    font-size: 18px;
+}
+
+/* Chat area */
+.chat-box {
+    flex: 1;
+    padding: 10px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Messages */
+.message {
+    padding: 10px 15px;
+    border-radius: 15px;
+    margin: 8px;
+    max-width: 70%;
+    font-size: 14px;
+}
+
+.her {
+    background: white;
+    align-self: flex-start;
+}
+
+.me {
+    background: #dcf8c6;
+    align-self: flex-end;
+}
+
+/* Input area */
+.input-area {
+    display: flex;
+    padding: 10px;
+    background: #f0f0f0;
+}
+
+input {
+    flex: 1;
+    padding: 10px;
+    border-radius: 20px;
+    border: none;
+    outline: none;
+}
+
+button {
+    margin-left: 10px;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 20px;
+    background: #25d366;
+    color: white;
+    cursor: pointer;
+}
+
+/* Typing animation */
+.typing {
+    background: white;
+    padding: 10px 15px;
+    border-radius: 15px;
+    margin: 8px;
+    display: flex;
+    gap: 5px;
+    width: fit-content;
+}
+
+.dot {
+    width: 6px;
+    height: 6px;
+    background: gray;
+    border-radius: 50%;
+    animation: blink 1.4s infinite;
+}
+
+.dot:nth-child(2) { animation-delay: 0.2s; }
+.dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes blink {
+    0%, 80%, 100% { opacity: 0.2; }
+    40% { opacity: 1; }
+}
+
+/* Final button */
+.final-btn {
+    display: none;
+    text-align: center;
+    padding: 10px;
+}
+
+.typing.me {
+    align-self: flex-end;
+    background: #dcf8c6;
+}
+
+.typing.her {
+    align-self: flex-start;
+    background: white;
+}
+</style>
+</head>
+
+<body>
+
+<div class="chat-container">
+
+    <div class="header">💬 Chat with Soumik</div>
+
+    <div class="chat-box" id="chatBox"></div>
+
+    <div class="input-area">
+        <input type="text" id="inputMsg" readonly>
+        <button onclick="sendMessage()">Send</button>
+    </div>
+
+    <div class="final-btn" id="finalBtn">
+        <button onclick="goNext()">Grab Your Birthday Gifts ➡️</button>
+    </div>
+
+</div>
+
+<script>
+function goNext() {
+    window.location.href = "gifts.html";
+}
+
+const chatFlow = [
+    { her: "Hey...", me: "Hey you 😏" },
+    { her: "What are you doing?", me: "Thinking about someone annoying 😂" },
+    { her: "Wow rude 😒", me: "But also very special ❤️" },
+    { her: "Hmm okay I'll accept that 😌", me: "Good 😏" }
+];
+
+let step = 0;
+
+// Load first message in input
+document.getElementById("inputMsg").value = chatFlow[step].her;
+
+function createTyping() {
+    const typing = document.createElement("div");
+    typing.classList.add("typing", "me"); // 👈 add "me" here
+
+    for (let i = 0; i < 3; i++) {
+        const dot = document.createElement("div");
+        dot.classList.add("dot");
+        typing.appendChild(dot);
+    }
+
+    return typing;
+}
+
+function sendMessage() {
+    const chatBox = document.getElementById("chatBox");
+    const input = document.getElementById("inputMsg");
+
+    // Show her message
+    const herMsg = document.createElement("div");
+    herMsg.classList.add("message", "her");
+    herMsg.innerText = input.value;
+    chatBox.appendChild(herMsg);
+
+    input.value = "";
+    chatBox.scrollTop = chatBox.scrollHeight;
+
+    // Typing animation for your reply
+    const typing = createTyping();
+    chatBox.appendChild(typing);
+
+    setTimeout(() => {
+        chatBox.removeChild(typing);
+
+        const myMsg = document.createElement("div");
+        myMsg.classList.add("message", "me");
+        myMsg.innerText = chatFlow[step].me;
+        chatBox.appendChild(myMsg);
+
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+        step++;
+
+       if (step < chatFlow.length) {
+    input.value = chatFlow[step].her;
+} else {
+    // Hide input + send button
+    document.querySelector(".input-area").style.display = "none";
+
+    // Show final button
+    document.getElementById("finalBtn").style.display = "block";
+}
+    }, 1200);
+}
+
+</script>
+
+</body>
+</html>
